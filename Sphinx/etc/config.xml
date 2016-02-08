@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Naumov_Sphinx>
+            <version>1.0.0</version>
+        </Naumov_Sphinx>
+    </modules>
+    <global>
+        <blocks>
+            <sphinx>
+                <class>Naumov_Sphinx_Block</class>
+            </sphinx>
+        </blocks>
+        <models>
+            <sphinx>
+                <class>Naumov_Sphinx_Model</class>
+                <resourceModel>sphinx_mysql4</resourceModel>
+            </sphinx>
+            <sphinx_mysql4>
+                <class>Naumov_Sphinx_Model_Mysql4</class>
+                <entities>
+                    <sphinx>
+                        <table>sphinx_sphinx</table>
+                    </sphinx>
+                </entities>
+            </sphinx_mysql4>
+        </models>
+        <resources>
+            <sphinx_setup>
+                <setup>
+                    <module>Naumov_Sphinx</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </sphinx_setup>
+        </resources>
+        <helpers>
+            <sphinx>
+                <class>Naumov_Sphinx_Helper</class>
+            </sphinx>
+        </helpers>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <sphinx>naumov_sphinx.xml</sphinx>
+            </updates>
+        </layout>
+        <routers>
+            <sphinx>
+                <use>standard</use>
+                <args>
+                    <module>Naumov_Sphinx</module>
+                    <frontName>sphinx</frontName>
+                </args>
+            </sphinx>
+        </routers>
+    </frontend>
+    <admin>
+        <routers>
+            <sphinx>
+                <use>admin</use>
+                <args>
+                    <module>Naumov_Sphinx</module>
+                    <frontName>sphinx_adminhtml</frontName>
+                </args>
+            </sphinx>
+        </routers>
+    </admin>
+    <crontab>
+        <jobs>
+            <sphinx_reindex_table>
+                <schedule>
+                    <cron_expr>0 5 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>sphinx/cron::runReindex</model>
+                </run>
+            </sphinx_reindex_table>
+        </jobs>
+    </crontab>
+    <adminhtml>
+        <menu>
+            <sphinx module="sphinx">
+                <title>Sphinx search</title>
+                <sort_order>70</sort_order>
+                <children>
+                    <sphinx module="sphinx">
+                        <title>Search index</title>
+                        <sort_order>0</sort_order>
+                        <action>sphinx_adminhtml/adminhtml_sphinx/index</action>
+                    </sphinx>
+                    <wordsform>
+                        <title>Words form</title>
+                        <sort_order>0</sort_order>
+                        <action>sphinx_adminhtml/adminhtml_sphinx/wordsform</action>
+                    </wordsform>
+                </children>
+            </sphinx>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <sphinx>
+                            <title>Sphinx search</title>
+                            <children>
+                                <title>Search index</title>
+                            </children>
+                        </sphinx>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <sphinx>
+                                            <title>Sphinx settings</title>
+                                        </sphinx>
+                                        <wordsform>
+                                            <title>Words form</title>
+                                        </wordsform>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>
